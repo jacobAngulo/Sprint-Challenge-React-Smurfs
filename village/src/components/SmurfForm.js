@@ -52,13 +52,7 @@ class SmurfForm extends Component {
   render() {
     return (
       <div className="SmurfForm">
-        <form
-          onSubmit={
-            this.props.activeSmurf
-              ? event => this.props.updateSmurf(event, this.state.smurf)
-              : event => this.props.addSmurf(event, this.state.smurf)
-          }
-        >
+        <form>
           <input
             onChange={this.handleInputChange}
             placeholder="name"
@@ -83,7 +77,6 @@ class SmurfForm extends Component {
                 ? event => this.props.updateSmurf(event, this.state.smurf)
                 : event => this.props.addSmurf(event, this.state.smurf)
             }
-            type="submit"
           >
             {this.props.activeSmurf ? "update smurf" : "add smurf to village"}
           </button>

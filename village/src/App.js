@@ -50,17 +50,17 @@ class App extends Component {
     this.props.history.push('/smurf-form')
   }
 
-  updateSmurf = (event, updatedSmurf) => {
-    event.preventDefault();
+  updateSmurf = (e, updatedSmurf) => {
+    e.preventDefault();
     axios
       .put(`http://localhost:3333/smurfs/${updatedSmurf.id}`, updatedSmurf)
       .then(res => {
-        // this.setState({
-        //   activeSmurf: null,
-        //   smurfs: res.data
-        // })
+        this.setState({
+          activeSmurf: null,
+          smurfs: res.data
+        })
         console.log(this.props, res)
-        // this.props.history.push("/");
+        this.props.history.push("/");
       })
       .catch(err => console.log('ERR', err))
   }
@@ -84,8 +84,8 @@ class App extends Component {
           render={(props) => <SmurfForm 
             {...props}
             activeSmurf={this.state.activeSmurf}
-            addSmurf={this.addSmurf} />}
-            updateSmurf={this.updateSmurf}
+            addSmurf={this.addSmurf} 
+            updateSmurf={this.updateSmurf}/>}
         />
         <Route
           path="/smurfs/:id"
