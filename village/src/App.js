@@ -11,6 +11,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      activeSmurf: null,
       smurfs: []
     };
   }
@@ -39,6 +40,30 @@ class App extends Component {
       })
       .catch(err => console.log("ERR", err));
   };
+
+  handleUpdate = (e, smurf) => {
+    e.preventDefault();
+    console.log(smurf)
+    this.setState({
+      activeSmurf: smurf
+    })
+    this.props.history.push('/smurf-form')
+  }
+
+  updateSmurf = (event, updatedSmurf) => {
+    event.preventDefault();
+    axios
+      .put(`http://localhost:3333/smurfs/${updatedSmurf.id}`, updatedSmurf)
+      .then(res => {
+        // this.setState({
+        //   activeSmurf: null,
+        //   smurfs: res.data
+        // })
+        console.log(this.props, res)
+        // this.props.history.push("/");
+      })
+      .catch(err => console.log('ERR', err))
+  }
   // add any needed code to ensure that the smurfs collection exists on state and it has data coming from the server
   // Notice what your map function is looping over and returning inside of Smurfs.
   // You'll need to make sure you have the right properties on state and pass them down to props.
@@ -56,11 +81,17 @@ class App extends Component {
         />
         <Route
           path="/smurf-form"
-          render={() => <SmurfForm addSmurf={this.addSmurf} />}
+          render={(props) => <SmurfForm 
+            {...props}
+            activeSmurf={this.state.activeSmurf}
+            addSmurf={this.addSmurf} />}
+            updateSmurf={this.updateSmurf}
         />
         <Route
           path="/smurfs/:id"
-          render={props => <Smurf {...props} smurfs={this.state.smurfs} />}
+          render={props => <Smurf {...props} 
+          handleUpdate={this.handleUpdate}
+          smurfs={this.state.smurfs} />}
         />
       </div>
     );

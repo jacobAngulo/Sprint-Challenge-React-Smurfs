@@ -1,61 +1,92 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 class SmurfForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      age: '',
-      height: ''
+      smurf: this.props.activeSmurf || {
+        name: "",
+        age: "",
+        height: ""
+      }
     };
   }
 
-  addSmurf = event => {
-    event.preventDefault();
-    // add code to create the smurf using the api
-    let newSmurf = {
-      name: this.state.name,
-      age: this.state.age,
-      height: this.state.height
-    }
-    if(this.state.name !== '' && this.state.age !== '' && this.state.height !== '') {
-      this.props.addSmurf(event, newSmurf)
-    }
+  // addSmurf = event => {
+  //   event.preventDefault();
+  //   // add code to create the smurf using the api
+  //   if (
+  //     this.state.smurf.name !== "" &&
+  //     this.state.smurf.age !== "" &&
+  //     this.state.smurf.height !== ""
+  //   ) {
+  //     this.props.addSmurf(event, this.state.smurf);
+  //   }
+  // };
 
-    this.setState({
-      name: '',
-      age: '',
-      height: ''
-    });
-  }
+  // updateSmurf = event => {
+  //   event.preventDefault();
+  //   if (
+  //     this.state.smurf.name !== "" &&
+  //     this.state.smurf.age !== "" &&
+  //     this.state.smurf.height !== ""
+  //   ) {
+  //     this.props.addSmurf(event, this.state.smurf);
+  //   }
+  // };
 
   handleInputChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+    e.persist();
+    let value = e.target.value;
+    if (e.target.name === "age") {
+      value = parseInt(value, 10);
+    }
+    this.setState(prevState => ({
+      smurf: {
+        ...prevState.smurf,
+        [e.target.name]: value
+      }
+    }));
   };
 
   render() {
     return (
       <div className="SmurfForm">
-        <form onSubmit={this.addSmurf}>
+        <form
+          onSubmit={
+            this.props.activeSmurf
+              ? event => this.props.updateSmurf(event, this.state.smurf)
+              : event => this.props.addSmurf(event, this.state.smurf)
+          }
+        >
           <input
             onChange={this.handleInputChange}
             placeholder="name"
-            value={this.state.name}
+            value={this.state.smurf.name}
             name="name"
           />
           <input
             onChange={this.handleInputChange}
             placeholder="age"
-            value={this.state.age}
+            value={this.state.smurf.age}
             name="age"
           />
           <input
             onChange={this.handleInputChange}
             placeholder="height"
-            value={this.state.height}
+            value={this.state.smurf.height}
             name="height"
           />
-          <button type="submit">Add to the village</button>
+          <button
+            onClick={
+              this.props.activeSmurf
+                ? event => this.props.updateSmurf(event, this.state.smurf)
+                : event => this.props.addSmurf(event, this.state.smurf)
+            }
+            type="submit"
+          >
+            {this.props.activeSmurf ? "update smurf" : "add smurf to village"}
+          </button>
         </form>
       </div>
     );
